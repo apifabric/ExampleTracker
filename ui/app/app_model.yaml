@@ -1,0 +1,581 @@
+about:
+  date: November 25, 2024 23:58:20
+  recent_changes: works with modified safrs-react-admin
+  version: 0.0.0
+api_root: '{http_type}://{swagger_host}:{port}/{api}'
+authentication: '{system-default}'
+entities:
+  Attribute:
+    columns:
+    - label: ' name*'
+      name: name
+      required: true
+      search: true
+      sort: true
+      template: text
+      type: VARCHAR
+    - name: Type
+      required: true
+      template: text
+      type: VARCHAR
+    - name: description
+      template: text
+      type: TEXT
+    - name: id
+      template: integer
+      type: INTEGER
+    description: Table to store different attributes associated with examples.
+    detail_template: detail_template.html
+    exclude: 'false'
+    favorite: name
+    hidden: {}
+    home_template: home_template.html
+    info_list: Table to store different attributes associated with examples.
+    label: Attribute
+    mode: tab
+    new_template: new_template.html
+    primary_key:
+    - id
+    tab_groups:
+    - direction: tomany
+      fks:
+      - attribute_id
+      name: ExampleAttributeList
+      resource: ExampleAttribute
+    type: Attribute
+  Diff:
+    columns:
+    - label: ' id*'
+      name: id
+      search: true
+      sort: true
+      template: integer
+      type: INTEGER
+    - name: rule_id
+      required: true
+      template: integer
+      type: INTEGER
+    - name: before_value
+      template: text
+      type: VARCHAR
+    - name: after_value
+      template: text
+      type: VARCHAR
+    description: Table to store differences between old and new case data in support
+      of rule evaluation.
+    detail_template: detail_template.html
+    exclude: 'false'
+    favorite: id
+    hidden: {}
+    home_template: home_template.html
+    info_list: Table to store differences between old and new case data in support
+      of rule evaluation.
+    label: Diff
+    mode: tab
+    new_template: new_template.html
+    primary_key:
+    - id
+    tab_groups:
+    - direction: toone
+      fks:
+      - rule_id
+      name: rule
+      resource: Rule
+    type: Diff
+  Example:
+    columns:
+    - label: ' name*'
+      name: name
+      required: true
+      search: true
+      sort: true
+      template: text
+      type: VARCHAR
+    - name: description
+      template: text
+      type: TEXT
+    - name: id
+      template: integer
+      type: INTEGER
+    - name: date_entered
+      required: true
+      type: DATE
+    - name: is_predicted
+      type: Boolean
+    description: Table to store examples or cases entered by users.
+    detail_template: detail_template.html
+    exclude: 'false'
+    favorite: name
+    hidden: {}
+    home_template: home_template.html
+    info_list: Table to store examples or cases entered by users.
+    label: Example
+    mode: tab
+    new_template: new_template.html
+    primary_key:
+    - id
+    tab_groups:
+    - direction: tomany
+      fks:
+      - example_id
+      name: ExampleAttributeList
+      resource: ExampleAttribute
+    - direction: tomany
+      fks:
+      - example_id
+      name: ExampleAuthorList
+      resource: ExampleAuthor
+    - direction: tomany
+      fks:
+      - new_example_id
+      name: ExampleComparisonList
+      resource: ExampleComparison
+    - direction: tomany
+      fks:
+      - example_id
+      name: PredictionList
+      resource: Prediction
+    - direction: tomany
+      fks:
+      - example_supported_id
+      name: RuleList
+      resource: Rule
+    - direction: tomany
+      fks:
+      - source_case_data_id
+      name: source_case_dataRuleList
+      resource: Rule
+    type: Example
+  ExampleAttribute:
+    columns:
+    - label: ' id*'
+      name: id
+      search: true
+      sort: true
+      template: integer
+      type: INTEGER
+    - name: attribute_id
+      required: true
+      template: integer
+      type: INTEGER
+    - name: example_id
+      required: true
+      template: integer
+      type: INTEGER
+    - name: value
+      template: text
+      type: VARCHAR
+    description: Junction table linking examples and their attributes with the corresponding
+      values.
+    detail_template: detail_template.html
+    exclude: 'false'
+    favorite: id
+    hidden: {}
+    home_template: home_template.html
+    info_list: Junction table linking examples and their attributes with the corresponding
+      values.
+    label: ExampleAttribute
+    mode: tab
+    new_template: new_template.html
+    primary_key:
+    - id
+    tab_groups:
+    - direction: toone
+      fks:
+      - attribute_id
+      name: attribute
+      resource: Attribute
+    - direction: toone
+      fks:
+      - example_id
+      name: example
+      resource: Example
+    type: ExampleAttribute
+  ExampleAuthor:
+    columns:
+    - label: ' id*'
+      name: id
+      search: true
+      sort: true
+      template: integer
+      type: INTEGER
+    - name: example_id
+      required: true
+      template: integer
+      type: INTEGER
+    - name: user_id
+      required: true
+      template: integer
+      type: INTEGER
+    description: Junction table associating users with the examples they have authored.
+    detail_template: detail_template.html
+    exclude: 'false'
+    favorite: id
+    hidden: {}
+    home_template: home_template.html
+    info_list: Junction table associating users with the examples they have authored.
+    label: ExampleAuthor
+    mode: tab
+    new_template: new_template.html
+    primary_key:
+    - id
+    tab_groups:
+    - direction: toone
+      fks:
+      - example_id
+      name: example
+      resource: Example
+    - direction: toone
+      fks:
+      - user_id
+      name: user
+      resource: User
+    type: ExampleAuthor
+  ExampleComparison:
+    columns:
+    - label: ' id*'
+      name: id
+      search: true
+      sort: true
+      template: integer
+      type: INTEGER
+    - name: new_example_id
+      required: true
+      template: integer
+      type: INTEGER
+    - name: rule_id
+      required: true
+      template: integer
+      type: INTEGER
+    - name: result
+      template: text
+      type: VARCHAR
+    description: Table to store results of comparing new examples against existing
+      rules.
+    detail_template: detail_template.html
+    exclude: 'false'
+    favorite: id
+    hidden: {}
+    home_template: home_template.html
+    info_list: Table to store results of comparing new examples against existing rules.
+    label: ExampleComparison
+    mode: tab
+    new_template: new_template.html
+    primary_key:
+    - id
+    tab_groups:
+    - direction: toone
+      fks:
+      - new_example_id
+      name: new_example
+      resource: Example
+    - direction: toone
+      fks:
+      - rule_id
+      name: rule
+      resource: Rule
+    type: ExampleComparison
+  Log:
+    columns:
+    - label: ' id*'
+      name: id
+      search: true
+      sort: true
+      template: integer
+      type: INTEGER
+    - name: session_id
+      required: true
+      template: integer
+      type: INTEGER
+    - name: log_entry
+      required: true
+      template: text
+      type: TEXT
+    - name: log_date
+      type: DATETIME
+    description: Table to log actions taken by users in the system.
+    detail_template: detail_template.html
+    exclude: 'false'
+    favorite: id
+    hidden: {}
+    home_template: home_template.html
+    info_list: Table to log actions taken by users in the system.
+    label: Log
+    mode: tab
+    new_template: new_template.html
+    primary_key:
+    - id
+    tab_groups:
+    - direction: toone
+      fks:
+      - session_id
+      name: session
+      resource: Session
+    type: Log
+  Prediction:
+    columns:
+    - label: ' id*'
+      name: id
+      search: true
+      sort: true
+      template: integer
+      type: INTEGER
+    - name: example_id
+      required: true
+      template: integer
+      type: INTEGER
+    - name: rule_id
+      required: true
+      template: integer
+      type: INTEGER
+    - name: predicted_value
+      template: text
+      type: VARCHAR
+    - name: prediction_date
+      required: true
+      type: DATE
+    description: Table to store predicted outcomes using created rules.
+    detail_template: detail_template.html
+    exclude: 'false'
+    favorite: id
+    hidden: {}
+    home_template: home_template.html
+    info_list: Table to store predicted outcomes using created rules.
+    label: Prediction
+    mode: tab
+    new_template: new_template.html
+    primary_key:
+    - id
+    tab_groups:
+    - direction: toone
+      fks:
+      - example_id
+      name: example
+      resource: Example
+    - direction: toone
+      fks:
+      - rule_id
+      name: rule
+      resource: Rule
+    type: Prediction
+  Rule:
+    columns:
+    - label: ' name*'
+      name: name
+      required: true
+      search: true
+      sort: true
+      template: text
+      type: VARCHAR
+    - name: example_supported_id
+      required: true
+      template: integer
+      type: INTEGER
+    - name: source_case_data_id
+      required: true
+      template: integer
+      type: INTEGER
+    - name: description
+      template: text
+      type: TEXT
+    - name: id
+      template: integer
+      type: INTEGER
+    description: Table for storing rules that discriminate between different cases.
+    detail_template: detail_template.html
+    exclude: 'false'
+    favorite: name
+    hidden: {}
+    home_template: home_template.html
+    info_list: Table for storing rules that discriminate between different cases.
+    label: Rule
+    mode: tab
+    new_template: new_template.html
+    primary_key:
+    - id
+    tab_groups:
+    - direction: tomany
+      fks:
+      - rule_id
+      name: DiffList
+      resource: Diff
+    - direction: tomany
+      fks:
+      - rule_id
+      name: ExampleComparisonList
+      resource: ExampleComparison
+    - direction: tomany
+      fks:
+      - rule_id
+      name: PredictionList
+      resource: Prediction
+    - direction: tomany
+      fks:
+      - rule_id
+      name: RuleAuthorList
+      resource: RuleAuthor
+    - direction: toone
+      fks:
+      - example_supported_id
+      name: example_supported
+      resource: Example
+    - direction: toone
+      fks:
+      - source_case_data_id
+      name: source_case_data
+      resource: Example
+    type: Rule
+  RuleAuthor:
+    columns:
+    - label: ' id*'
+      name: id
+      search: true
+      sort: true
+      template: integer
+      type: INTEGER
+    - name: rule_id
+      required: true
+      template: integer
+      type: INTEGER
+    - name: user_id
+      required: true
+      template: integer
+      type: INTEGER
+    description: Junction table associating users with the rules they have authored.
+    detail_template: detail_template.html
+    exclude: 'false'
+    favorite: id
+    hidden: {}
+    home_template: home_template.html
+    info_list: Junction table associating users with the rules they have authored.
+    label: RuleAuthor
+    mode: tab
+    new_template: new_template.html
+    primary_key:
+    - id
+    tab_groups:
+    - direction: toone
+      fks:
+      - rule_id
+      name: rule
+      resource: Rule
+    - direction: toone
+      fks:
+      - user_id
+      name: user
+      resource: User
+    type: RuleAuthor
+  Session:
+    columns:
+    - label: ' id*'
+      name: id
+      search: true
+      sort: true
+      template: integer
+      type: INTEGER
+    - name: user_id
+      required: true
+      template: integer
+      type: INTEGER
+    - name: start_time
+      type: DATETIME
+    - name: end_time
+      type: DATETIME
+    detail_template: detail_template.html
+    exclude: 'false'
+    favorite: id
+    hidden: {}
+    home_template: home_template.html
+    label: Session
+    mode: tab
+    new_template: new_template.html
+    primary_key:
+    - id
+    tab_groups:
+    - direction: tomany
+      fks:
+      - session_id
+      name: LogList
+      resource: Log
+    - direction: toone
+      fks:
+      - user_id
+      name: user
+      resource: User
+    type: Session
+  User:
+    columns:
+    - label: ' username*'
+      name: username
+      required: true
+      search: true
+      sort: true
+      template: text
+      type: VARCHAR
+    - name: email
+      required: true
+      template: text
+      type: VARCHAR
+    - name: created_at
+      type: DATETIME
+    - name: id
+      template: integer
+      type: INTEGER
+    description: Table to store user information who create examples or rules.
+    detail_template: detail_template.html
+    exclude: 'false'
+    favorite: username
+    hidden: {}
+    home_template: home_template.html
+    info_list: Table to store user information who create examples or rules.
+    label: User
+    mode: tab
+    new_template: new_template.html
+    primary_key:
+    - id
+    tab_groups:
+    - direction: tomany
+      fks:
+      - user_id
+      name: ExampleAuthorList
+      resource: ExampleAuthor
+    - direction: tomany
+      fks:
+      - user_id
+      name: RuleAuthorList
+      resource: RuleAuthor
+    - direction: tomany
+      fks:
+      - user_id
+      name: SessionList
+      resource: Session
+    type: User
+settings:
+  HomeJS: /admin-app/home.js
+  max_list_columns: 8
+  style_guide:
+    applicationLocales:
+    - en
+    - es
+    currency_symbol: $
+    currency_symbol_position: left
+    date_format: LL
+    decimal_max: '1000000000'
+    decimal_min: '0'
+    decimal_separator: .
+    edit_on_mode: dblclick
+    exclude_listpicker: false
+    include_translation: false
+    keycloak_client_id: alsclient
+    keycloak_realm: kcals
+    keycloak_url: http://localhost:8080
+    locale: en
+    max_decimal_digits: '4'
+    min_decimal_digits: '2'
+    mode: tab
+    pick_style: list
+    serviceType: OntimizeEE
+    startSessionPath: /auth/login
+    style: light
+    thousand_separator: ','
+    use_keycloak: false

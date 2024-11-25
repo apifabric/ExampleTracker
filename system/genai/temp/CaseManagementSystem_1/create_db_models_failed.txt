@@ -1,0 +1,2 @@
+Error creating database from model: November 25, 2024 23:57:54
+type object 'datetime.datetime' has no attribute 'datetime'

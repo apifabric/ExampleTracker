@@ -1,0 +1,124 @@
+// Copy this text, paste to https://dbdiagram.io/d
+// Or, https://databasediagram.com/app
+// Or, view in VSCode with extension: "DBML Live Preview"
+
+Project DBML {
+  Note: '''
+Attribute: Table to store different attributes associated with examples.
+Diff: Table to store differences between old and new case data in support of rule evaluation.
+Rule: Table for storing rules that discriminate between different cases.
+Example: Table to store examples or cases entered by users.
+ExampleAttribute: Junction table linking examples and their attributes with the corresponding values.
+ExampleAuthor: Junction table associating users with the examples they have authored.
+User: Table to store user information who create examples or rules.
+ExampleComparison: Table to store results of comparing new examples against existing rules.
+Log: Table to log actions taken by users in the system.
+Session: missing (requires genai creation)
+Prediction: Table to store predicted outcomes using created rules.
+RuleAuthor: Junction table associating users with the rules they have authored.
+'''
+}
+
+Table Attribute {
+    id INTEGER [primary key]
+    name VARCHAR 
+    Type VARCHAR 
+    description TEXT 
+    }
+
+Table Diff {
+    id INTEGER [primary key]
+    rule_id INTEGER 
+    before_value VARCHAR 
+    after_value VARCHAR 
+    }
+
+Table Rule {
+    id INTEGER [primary key]
+    name VARCHAR 
+    description TEXT 
+    example_supported_id INTEGER 
+    source_case_data_id INTEGER 
+    }
+
+Table Example {
+    id INTEGER [primary key]
+    name VARCHAR 
+    description TEXT 
+    date_entered DATE 
+    is_predicted BOOLEAN 
+    }
+
+Table ExampleAttribute {
+    id INTEGER [primary key]
+    example_id INTEGER 
+    attribute_id INTEGER 
+    value VARCHAR 
+    }
+
+Table ExampleAuthor {
+    id INTEGER [primary key]
+    user_id INTEGER 
+    example_id INTEGER 
+    }
+
+Table User {
+    id INTEGER [primary key]
+    username VARCHAR 
+    email VARCHAR 
+    created_at DATETIME 
+    }
+
+Table ExampleComparison {
+    id INTEGER [primary key]
+    new_example_id INTEGER 
+    rule_id INTEGER 
+    result VARCHAR 
+    }
+
+Table Log {
+    id INTEGER [primary key]
+    session_id INTEGER 
+    log_entry TEXT 
+    log_date DATETIME 
+    }
+
+Table Session {
+    id INTEGER [primary key]
+    user_id INTEGER 
+    start_time DATETIME 
+    end_time DATETIME 
+    }
+
+Table Prediction {
+    id INTEGER [primary key]
+    rule_id INTEGER 
+    example_id INTEGER 
+    predicted_value VARCHAR 
+    prediction_date DATE 
+    }
+
+Table RuleAuthor {
+    id INTEGER [primary key]
+    user_id INTEGER 
+    rule_id INTEGER 
+    }
+
+
+
+// Relationships
+    Ref: Diff.(rule_id) < Rule.(id)
+    Ref: Rule.(example_supported_id) < Example.(id)
+    Ref: Rule.(source_case_data_id) < Example.(id)
+    Ref: ExampleAttribute.(attribute_id) < Attribute.(id)
+    Ref: ExampleAttribute.(example_id) < Example.(id)
+    Ref: ExampleAuthor.(example_id) < Example.(id)
+    Ref: ExampleAuthor.(user_id) < User.(id)
+    Ref: ExampleComparison.(new_example_id) < Example.(id)
+    Ref: ExampleComparison.(rule_id) < Rule.(id)
+    Ref: Log.(session_id) < Session.(id)
+    Ref: Session.(user_id) < User.(id)
+    Ref: Prediction.(example_id) < Example.(id)
+    Ref: Prediction.(rule_id) < Rule.(id)
+    Ref: RuleAuthor.(rule_id) < Rule.(id)
+    Ref: RuleAuthor.(user_id) < User.(id)

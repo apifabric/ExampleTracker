@@ -1,0 +1,44 @@
+<o-form-layout-manager attr="Log" mode="tab" title="LOG">
+    <div fxFill fxLayout="column" fxLayoutAlign="start">
+        <o-table 
+            attr="LogTable" 
+            service="Log" 
+            entity="Log" 
+            title="LOG"
+            keys="id"
+            columns="id;session_id;log_entry;log_date" 
+            header-actions="R;D"
+            visible-columns="id;session_id;log_entry;log_date"  
+            sort-columns="id" 
+            query-rows="20" 
+            quick-filter="yes"
+            row-height="medium" 
+            select-all-checkbox="true" 
+            pageable="yes"  
+            auto-adjust="true" 
+            virtual-scroll="yes" 
+            edition-mode="dblclick"
+            horizontal-scroll="yes"
+            show-title="yes"
+            export-button="yes">
+            
+            <o-table-column #id attr="id" title=" id*" type="integer" editable="no" required="no" content-align="center"></o-table-column>
+            
+            <o-table-column attr="session_id" title="session_id">
+    <o-table-cell-renderer-service attr="session_id" 
+        service="Session" entity="SessionType" columns="id;id"
+        parent-keys="id:session_id"
+        value-column="id" keys="session_id"
+        visible-columns="id" separator=" - " width="680px">
+    </o-table-cell-renderer-service>
+</o-table-column>
+            
+            <o-table-column #log_entry attr="log_entry" title="log_entry" editable="no" required="yes" content-align="left"></o-table-column>
+            
+            <o-date-input #log_date attr="log_date" type="timestamp" label="log_date" editable="no" required="no" format="LL" fxFlex="20%" class="form-field"></o-date-input>
+            
+            <o-table-context-menu></o-table-context-menu>
+            <o-table-paginator page-size-options="24;48;96"></o-table-paginator>
+        </o-table>
+    </div>
+</o-form-layout-manager>

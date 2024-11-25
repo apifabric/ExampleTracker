@@ -1,0 +1,79 @@
+{
+    "models": [
+        {
+            "classname": "Example",
+            "code": "class Example(Base):\n    \"\"\"description: Table to store examples or cases entered by users.\"\"\"\n    __tablename__ = 'example'\n\n    id = Column(Integer, primary_key=True, autoincrement=True)\n    name = Column(String, nullable=False)\n    description = Column(Text, nullable=True)\n    date_entered = Column(Date, nullable=False)\n    is_predicted = Column(Boolean, default=False)",
+            "description": "Table to store examples or cases entered by users.",
+            "name": "Example"
+        },
+        {
+            "classname": "Attribute",
+            "code": "class Attribute(Base):\n    \"\"\"description: Table to store different attributes associated with examples.\"\"\"\n    __tablename__ = 'attribute'\n\n    id = Column(Integer, primary_key=True, autoincrement=True)\n    name = Column(String, nullable=False)\n    type = Column(String, nullable=False)  # e.g., 'String', 'Integer'\n    description = Column(Text, nullable=True)",
+            "description": "Table to store different attributes associated with examples.",
+            "name": "Attribute"
+        },
+        {
+            "classname": "ExampleAttribute",
+            "code": "class ExampleAttribute(Base):\n    \"\"\"description: Junction table linking examples and their attributes with the corresponding values.\"\"\"\n    __tablename__ = 'example_attribute'\n\n    id = Column(Integer, primary_key=True, autoincrement=True)\n    example_id = Column(Integer, ForeignKey('example.id'), nullable=False)\n    attribute_id = Column(Integer, ForeignKey('attribute.id'), nullable=False)\n    value = Column(String, nullable=True)",
+            "description": "Junction table linking examples and their attributes with the corresponding values.",
+            "name": "ExampleAttribute"
+        },
+        {
+            "classname": "Rule",
+            "code": "class Rule(Base):\n    \"\"\"description: Table for storing rules that discriminate between different cases.\"\"\"\n    __tablename__ = 'rule'\n\n    id = Column(Integer, primary_key=True, autoincrement=True)\n    name = Column(String, nullable=False)\n    description = Column(Text, nullable=True)\n    example_supported_id = Column(Integer, ForeignKey('example.id'), nullable=False)\n    source_case_data_id = Column(Integer, ForeignKey('example.id'), nullable=False)",
+            "description": "Table for storing rules that discriminate between different cases.",
+            "name": "Rule"
+        },
+        {
+            "classname": "Diff",
+            "code": "class Diff(Base):\n    \"\"\"description: Table to store differences between old and new case data in support of rule evaluation.\"\"\"\n    __tablename__ = 'diff'\n\n    id = Column(Integer, primary_key=True, autoincrement=True)\n    rule_id = Column(Integer, ForeignKey('rule.id'), nullable=False)\n    before_value = Column(String, nullable=True)\n    after_value = Column(String, nullable=True)",
+            "description": "Table to store differences between old and new case data in support of rule evaluation.",
+            "name": "Diff"
+        },
+        {
+            "classname": "Prediction",
+            "code": "class Prediction(Base):\n    \"\"\"description: Table to store predicted outcomes using created rules.\"\"\"\n    __tablename__ = 'prediction'\n\n    id = Column(Integer, primary_key=True, autoincrement=True)\n    rule_id = Column(Integer, ForeignKey('rule.id'), nullable=False)\n    example_id = Column(Integer, ForeignKey('example.id'), nullable=False)\n    predicted_value = Column(String, nullable=True)\n    prediction_date = Column(Date, nullable=False)",
+            "description": "Table to store predicted outcomes using created rules.",
+            "name": "Prediction"
+        },
+        {
+            "classname": "User",
+            "code": "class User(Base):\n    \"\"\"description: Table to store user information who create examples or rules.\"\"\"\n    __tablename__ = 'user'\n\n    id = Column(Integer, primary_key=True, autoincrement=True)\n    username = Column(String, nullable=False, unique=True)\n    email = Column(String, nullable=False, unique=True)\n    created_at = Column(DateTime, default=datetime.utcnow)",
+            "description": "Table to store user information who create examples or rules.",
+            "name": "User"
+        },
+        {
+            "classname": "ExampleAuthor",
+            "code": "class ExampleAuthor(Base):\n    \"\"\"description: Junction table associating users with the examples they have authored.\"\"\"\n    __tablename__ = 'example_author'\n\n    id = Column(Integer, primary_key=True, autoincrement=True)\n    user_id = Column(Integer, ForeignKey('user.id'), nullable=False)\n    example_id = Column(Integer, ForeignKey('example.id'), nullable=False)",
+            "description": "Junction table associating users with the examples they have authored.",
+            "name": "ExampleAuthor"
+        },
+        {
+            "classname": "RuleAuthor",
+            "code": "class RuleAuthor(Base):\n    \"\"\"description: Junction table associating users with the rules they have authored.\"\"\"\n    __tablename__ = 'rule_author'\n\n    id = Column(Integer, primary_key=True, autoincrement=True)\n    user_id = Column(Integer, ForeignKey('user.id'), nullable=False)\n    rule_id = Column(Integer, ForeignKey('rule.id'), nullable=False)",
+            "description": "Junction table associating users with the rules they have authored.",
+            "name": "RuleAuthor"
+        },
+        {
+            "classname": "ExampleComparison",
+            "code": "class ExampleComparison(Base):\n    \"\"\"description: Table to store results of comparing new examples against existing rules.\"\"\"\n    __tablename__ = 'example_comparison'\n\n    id = Column(Integer, primary_key=True, autoincrement=True)\n    new_example_id = Column(Integer, ForeignKey('example.id'), nullable=False)\n    rule_id = Column(Integer, ForeignKey('rule.id'), nullable=False)\n    result = Column(String, nullable=True)",
+            "description": "Table to store results of comparing new examples against existing rules.",
+            "name": "ExampleComparison"
+        },
+        {
+            "classname": "Session",
+            "code": "class Session(Base):\n    \"\"\"description: Table to store sessions of activity for different users interacting with the system.\"\"\"\n    __tablename__ = 'session'\n\n    id = Column(Integer, primary_key=True, autoincrement=True)\n    user_id = Column(Integer, ForeignKey('user.id'), nullable=False)\n    start_time = Column(DateTime, default=datetime.utcnow)\n    end_time = Column(DateTime, nullable=True)",
+            "description": "Table to store sessions of activity for different users interacting with the system.",
+            "name": "Session"
+        },
+        {
+            "classname": "Log",
+            "code": "class Log(Base):\n    \"\"\"description: Table to log actions taken by users in the system.\"\"\"\n    __tablename__ = 'log'\n\n    id = Column(Integer, primary_key=True, autoincrement=True)\n    session_id = Column(Integer, ForeignKey('session.id'), nullable=False)\n    log_entry = Column(Text, nullable=False)\n    log_date = Column(DateTime, default=datetime.utcnow)",
+            "description": "Table to log actions taken by users in the system.",
+            "name": "Log"
+        }
+    ],
+    "rules": [],
+    "test_data": "from sqlalchemy import create_engine\nfrom sqlalchemy.orm import sessionmaker\nfrom datetime import date\n\n# Establish SQLite connection\ndb_path = \"sqlite:///system/genai/temp/create_db_models.sqlite\"\nengine = create_engine(db_path)\nSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)\nsession = SessionLocal()\n\n# Add test data\nexample1 = Example(name=\"Example One\", description=\"First example description\", date_entered=date(2023, 1, 15), is_predicted=False)\nexample2 = Example(name=\"Example Two\", description=\"Second example description\", date_entered=date(2023, 2, 20), is_predicted=False)\nexample3 = Example(name=\"Example Three\", description=\"Third example description\", date_entered=date(2023, 3, 25), is_predicted=False)\nexample4 = Example(name=\"Example Four\", description=\"Fourth example description\", date_entered=date(2023, 4, 30), is_predicted=False)\n\nattribute1 = Attribute(name=\"Attribute A\", type=\"String\", description=\"This is a string attribute.\")\nattribute2 = Attribute(name=\"Attribute B\", type=\"Integer\", description=\"This is an integer attribute.\")\nattribute3 = Attribute(name=\"Attribute C\", type=\"Boolean\", description=\"This is a boolean attribute.\")\nattribute4 = Attribute(name=\"Attribute D\", type=\"Date\", description=\"This is a date attribute.\")\n\nexample_attribute1 = ExampleAttribute(example_id=1, attribute_id=1, value=\"Value A\")\nexample_attribute2 = ExampleAttribute(example_id=2, attribute_id=2, value=\"42\")\nexample_attribute3 = ExampleAttribute(example_id=3, attribute_id=3, value=\"True\")\nexample_attribute4 = ExampleAttribute(example_id=4, attribute_id=4, value=\"2023-04-30\")",
+    "name": "ExampleTracker"
+}

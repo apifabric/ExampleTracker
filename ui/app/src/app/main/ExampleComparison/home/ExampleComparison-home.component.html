@@ -1,0 +1,51 @@
+<o-form-layout-manager attr="ExampleComparison" mode="tab" title="EXAMPLECOMPARISON">
+    <div fxFill fxLayout="column" fxLayoutAlign="start">
+        <o-table 
+            attr="ExampleComparisonTable" 
+            service="ExampleComparison" 
+            entity="ExampleComparison" 
+            title="EXAMPLECOMPARISON"
+            keys="id"
+            columns="id;new_example_id;rule_id;result" 
+            header-actions="R;D"
+            visible-columns="id;new_example_id;rule_id;result"  
+            sort-columns="id" 
+            query-rows="20" 
+            quick-filter="yes"
+            row-height="medium" 
+            select-all-checkbox="true" 
+            pageable="yes"  
+            auto-adjust="true" 
+            virtual-scroll="yes" 
+            edition-mode="dblclick"
+            horizontal-scroll="yes"
+            show-title="yes"
+            export-button="yes">
+            
+            <o-table-column #id attr="id" title=" id*" type="integer" editable="no" required="no" content-align="center"></o-table-column>
+            
+            <o-table-column attr="new_example_id" title="new_example_id">
+    <o-table-cell-renderer-service attr="new_example_id" 
+        service="Example" entity="ExampleType" columns="id;name"
+        parent-keys="id:new_example_id"
+        value-column="name" keys="new_example_id"
+        visible-columns="name" separator=" - " width="680px">
+    </o-table-cell-renderer-service>
+</o-table-column>
+            
+            <o-table-column attr="rule_id" title="rule_id">
+    <o-table-cell-renderer-service attr="rule_id" 
+        service="Rule" entity="RuleType" columns="id;name"
+        parent-keys="id:rule_id"
+        value-column="name" keys="rule_id"
+        visible-columns="name" separator=" - " width="680px">
+    </o-table-cell-renderer-service>
+</o-table-column>
+            
+            <o-table-column #result attr="result" title="result" editable="no" required="no" content-align="left"></o-table-column>
+            
+            <o-table-context-menu></o-table-context-menu>
+            <o-table-paginator page-size-options="24;48;96"></o-table-paginator>
+        </o-table>
+    </div>
+</o-form-layout-manager>

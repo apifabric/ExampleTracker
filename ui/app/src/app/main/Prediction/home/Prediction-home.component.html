@@ -1,0 +1,53 @@
+<o-form-layout-manager attr="Prediction" mode="tab" title="PREDICTION">
+    <div fxFill fxLayout="column" fxLayoutAlign="start">
+        <o-table 
+            attr="PredictionTable" 
+            service="Prediction" 
+            entity="Prediction" 
+            title="PREDICTION"
+            keys="id"
+            columns="id;example_id;rule_id;predicted_value;prediction_date" 
+            header-actions="R;D"
+            visible-columns="id;example_id;rule_id;predicted_value;prediction_date"  
+            sort-columns="id" 
+            query-rows="20" 
+            quick-filter="yes"
+            row-height="medium" 
+            select-all-checkbox="true" 
+            pageable="yes"  
+            auto-adjust="true" 
+            virtual-scroll="yes" 
+            edition-mode="dblclick"
+            horizontal-scroll="yes"
+            show-title="yes"
+            export-button="yes">
+            
+            <o-table-column #id attr="id" title=" id*" type="integer" editable="no" required="no" content-align="center"></o-table-column>
+            
+            <o-table-column attr="example_id" title="example_id">
+    <o-table-cell-renderer-service attr="example_id" 
+        service="Example" entity="ExampleType" columns="id;name"
+        parent-keys="id:example_id"
+        value-column="name" keys="example_id"
+        visible-columns="name" separator=" - " width="680px">
+    </o-table-cell-renderer-service>
+</o-table-column>
+            
+            <o-table-column attr="rule_id" title="rule_id">
+    <o-table-cell-renderer-service attr="rule_id" 
+        service="Rule" entity="RuleType" columns="id;name"
+        parent-keys="id:rule_id"
+        value-column="name" keys="rule_id"
+        visible-columns="name" separator=" - " width="680px">
+    </o-table-cell-renderer-service>
+</o-table-column>
+            
+            <o-table-column #predicted_value attr="predicted_value" title="predicted_value" editable="no" required="no" content-align="left"></o-table-column>
+            
+            <o-date-input #prediction_date attr="prediction_date" type="date" label="prediction_date" enabled="yes" required="yes" format="LL" fxFlex="20%" class="form-field"></o-date-input>
+            
+            <o-table-context-menu></o-table-context-menu>
+            <o-table-paginator page-size-options="24;48;96"></o-table-paginator>
+        </o-table>
+    </div>
+</o-form-layout-manager>

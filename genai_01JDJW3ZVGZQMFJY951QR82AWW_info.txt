@@ -1,0 +1,1 @@
+The system allows people to enter examples or cases and their data, described by attributes. Rules can then be created that discriminate between the cases. New rules are supported by an example. The differences between old and new case data is shown to help create new rules. New examples can be predicted with the rules. 

@@ -1,0 +1,79 @@
+{
+    "models": [
+        {
+            "classname": "Example",
+            "code": "class Example(Base):\n    \"\"\"\n    Description: Stores information about each example or case in the system.\n    \"\"\"\n    __tablename__ = 'example'\n\n    id = Column(Integer, primary_key=True, autoincrement=True)\n    name = Column(String, nullable=False)\n    description = Column(String)\n    created_date = Column(DateTime, default=datetime.datetime.now)\n    # Potentially more fields that describe the data at case level\n",
+            "description": "Stores information about each example or case in the system.",
+            "name": "Example"
+        },
+        {
+            "classname": "Attribute",
+            "code": "class Attribute(Base):\n    \"\"\"\n    Description: Describes each attribute that can belong to an example or case.\n    \"\"\"\n    __tablename__ = 'attribute'\n\n    id = Column(Integer, primary_key=True, autoincrement=True)\n    name = Column(String, nullable=False)\n    description = Column(String)\n",
+            "description": "Describes each attribute that can belong to an example or case.",
+            "name": "Attribute"
+        },
+        {
+            "classname": "ExampleAttribute",
+            "code": "class ExampleAttribute(Base):\n    \"\"\"\n    Description: Association between examples and their attributes with corresponding values.\n    \"\"\"\n    __tablename__ = 'example_attribute'\n\n    id = Column(Integer, primary_key=True, autoincrement=True)\n    example_id = Column(Integer, ForeignKey('example.id'), nullable=False)\n    attribute_id = Column(Integer, ForeignKey('attribute.id'), nullable=False)\n    value = Column(String)\n",
+            "description": "Association between examples and their attributes with corresponding values.",
+            "name": "ExampleAttribute"
+        },
+        {
+            "classname": "Rule",
+            "code": "class Rule(Base):\n    \"\"\"\n    Description: Defines rules used to discriminate between cases.\n    \"\"\"\n    __tablename__ = 'rule'\n\n    id = Column(Integer, primary_key=True, autoincrement=True)\n    name = Column(String, nullable=False)\n    description = Column(String)\n    supported_example_id = Column(Integer, ForeignKey('example.id'))\n    # Add more fields related to rule logic\n",
+            "description": "Defines rules used to discriminate between cases.",
+            "name": "Rule"
+        },
+        {
+            "classname": "RuleExample",
+            "code": "class RuleExample(Base):\n    \"\"\"\n    Description: Connects rules with examples that they use or support.\n    \"\"\"\n    __tablename__ = 'rule_example'\n\n    id = Column(Integer, primary_key=True, autoincrement=True)\n    rule_id = Column(Integer, ForeignKey('rule.id'), nullable=False)\n    example_id = Column(Integer, ForeignKey('example.id'), nullable=False)\n    role = Column(String)  # To specify if it supports or is tested against\n",
+            "description": "Connects rules with examples that they use or support.",
+            "name": "RuleExample"
+        },
+        {
+            "classname": "Difference",
+            "code": "class Difference(Base):\n    \"\"\"\n    Description: Captures differences between old and new case data.\n    \"\"\"\n    __tablename__ = 'difference'\n\n    id = Column(Integer, primary_key=True, autoincrement=True)\n    old_value = Column(String)\n    new_value = Column(String)\n    attribute_id = Column(Integer, ForeignKey('attribute.id'), nullable=False)\n    example_id = Column(Integer, ForeignKey('example.id'), nullable=False)\n",
+            "description": "Captures differences between old and new case data.",
+            "name": "Difference"
+        },
+        {
+            "classname": "Prediction",
+            "code": "class Prediction(Base):\n    \"\"\"\n    Description: Stores results of predictions made using defined rules on examples.\n    \"\"\"\n    __tablename__ = 'prediction'\n\n    id = Column(Integer, primary_key=True, autoincrement=True)\n    result = Column(String)\n    example_id = Column(Integer, ForeignKey('example.id'), nullable=False)\n    rule_id = Column(Integer, ForeignKey('rule.id'))\n",
+            "description": "Stores results of predictions made using defined rules on examples.",
+            "name": "Prediction"
+        },
+        {
+            "classname": "CaseData",
+            "code": "class CaseData(Base):\n    \"\"\"\n    Description: Holds specific data associated with each test case.\n    \"\"\"\n    __tablename__ = 'case_data'\n\n    id = Column(Integer, primary_key=True, autoincrement=True)\n    example_id = Column(Integer, ForeignKey('example.id'), nullable=False)\n    attribute_id = Column(Integer, ForeignKey('attribute.id'), nullable=False)\n    value = Column(String)\n",
+            "description": "Holds specific data associated with each test case.",
+            "name": "CaseData"
+        },
+        {
+            "classname": "User",
+            "code": "class User(Base):\n    \"\"\"\n    Description: Stores information about users who manage examples and rules.\n    \"\"\"\n    __tablename__ = 'user'\n\n    id = Column(Integer, primary_key=True, autoincrement=True)\n    username = Column(String, nullable=False)\n    password_hash = Column(String, nullable=False)\n    email = Column(String)\n    created_date = Column(DateTime, default=datetime.datetime.now)\n",
+            "description": "Stores information about users who manage examples and rules.",
+            "name": "User"
+        },
+        {
+            "classname": "UserRole",
+            "code": "class UserRole(Base):\n    \"\"\"\n    Description: Defines roles that a user can have.\n    \"\"\"\n    __tablename__ = 'user_role'\n\n    id = Column(Integer, primary_key=True, autoincrement=True)\n    name = Column(String, nullable=False)\n    description = Column(String)\n",
+            "description": "Defines roles that a user can have.",
+            "name": "UserRole"
+        },
+        {
+            "classname": "UserUserRole",
+            "code": "class UserUserRole(Base):\n    \"\"\"\n    Description: Association between users and roles they possess.\n    \"\"\"\n    __tablename__ = 'user_user_role'\n\n    id = Column(Integer, primary_key=True, autoincrement=True)\n    user_id = Column(Integer, ForeignKey('user.id'), nullable=False)\n    user_role_id = Column(Integer, ForeignKey('user_role.id'), nullable=False)\n",
+            "description": "Association between users and roles they possess.",
+            "name": "UserUserRole"
+        },
+        {
+            "classname": "Log",
+            "code": "class Log(Base):\n    \"\"\"\n    Description: Mantains a log of actions performed in the system.\n    \"\"\"\n    __tablename__ = 'log'\n\n    id = Column(Integer, primary_key=True, autoincrement=True)\n    user_id = Column(Integer, ForeignKey('user.id'))\n    action = Column(String, nullable=False)\n    timestamp = Column(DateTime, default=datetime.datetime.now)\n",
+            "description": "Mantains a log of actions performed in the system.",
+            "name": "Log"
+        }
+    ],
+    "rules": [],
+    "test_data": "# Example Test Data\nexample1 = Example(name='Example A', description='Case illustrating scenario A')\nexample2 = Example(name='Example B', description='Case illustrating scenario B')\nexample3 = Example(name='Example C', description='Case illustrating scenario C')\nexample4 = Example(name='Example D', description='Case illustrating scenario D')\n\nattribute1 = Attribute(name='Attribute 1', description='First attribute')\nattribute2 = Attribute(name='Attribute 2', description='Second attribute')\nattribute3 = Attribute(name='Attribute 3', description='Third attribute')\nattribute4 = Attribute(name='Attribute 4', description='Fourth attribute')\n\nexample_attribute1 = ExampleAttribute(example_id=1, attribute_id=1, value='Value A1')\nexample_attribute2 = ExampleAttribute(example_id=2, attribute_id=2, value='Value B1')\nexample_attribute3 = ExampleAttribute(example_id=3, attribute_id=3, value='Value C1')\nexample_attribute4 = ExampleAttribute(example_id=4, attribute_id=4, value='Value D1')\n\nrule1 = Rule(name='Rule 1', description='Rule description A')\nrule2 = Rule(name='Rule 2', description='Rule description B')\nrule3 = Rule(name='Rule 3', description='Rule description C')\nrule4 = Rule(name='Rule 4', description='Rule description D')\n\nrule_example1 = RuleExample(rule_id=1, example_id=1, role='supports')\nrule_example2 = RuleExample(rule_id=2, example_id=2, role='supports')\nrule_example3 = RuleExample(rule_id=3, example_id=3, role='supports')\nrule_example4 = RuleExample(rule_id=4, example_id=4, role='supports')\n\nuser1 = User(username='user1', password_hash='hash1', email='user1@example.com')\nuser2 = User(username='user2', password_hash='hash2', email='user2@example.com')\nuser3 = User(username='user3', password_hash='hash3', email='user3@example.com')\nuser4 = User(username='user4', password_hash='hash4', email='user4@example.com')\n\nuser_role1 = UserRole(name='Admin', description='Administrator')\nuser_role2 = UserRole(name='Analyst', description='Data Analyst')\nuser_role3 = UserRole(name='Tester', description='Tester')\nuser_role4 = UserRole(name='Developer', description='Developer')\n\nuser_user_role1 = UserUserRole(user_id=1, user_role_id=1)\nuser_user_role2 = UserUserRole(user_id=2, user_role_id=2)\nuser_user_role3 = UserUserRole(user_id=3, user_role_id=3)\nuser_user_role4 = UserUserRole(user_id=4, user_role_id=4)\n\nlog1 = Log(user_id=1, action='logged in')\nlog2 = Log(user_id=2, action='created example')\nlog3 = Log(user_id=3, action='modified rule')\nlog4 = Log(user_id=4, action='logged out')\n\nprediction1 = Prediction(result='Success', example_id=1, rule_id=1)\nprediction2 = Prediction(result='Failure', example_id=2, rule_id=2)\nprediction3 = Prediction(result='Success', example_id=3, rule_id=3)\nprediction4 = Prediction(result='Failure', example_id=4, rule_id=4)\n\ndifference1 = Difference(old_value='Old A1', new_value='New A1', attribute_id=1, example_id=1)\ndifference2 = Difference(old_value='Old B1', new_value='New B1', attribute_id=2, example_id=2)\ndifference3 = Difference(old_value='Old C1', new_value='New C1', attribute_id=3, example_id=3)\ndifference4 = Difference(old_value='Old D1', new_value='New D1', attribute_id=4, example_id=4)\n\ncase_data1 = CaseData(example_id=1, attribute_id=1, value='Data A1')\ncase_data2 = CaseData(example_id=2, attribute_id=2, value='Data B1')\ncase_data3 = CaseData(example_id=3, attribute_id=3, value='Data C1')\ncase_data4 = CaseData(example_id=4, attribute_id=4, value='Data D1')",
+    "name": "CaseManagementSystem"
+}

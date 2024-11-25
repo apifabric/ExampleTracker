@@ -1,0 +1,44 @@
+<o-form-layout-manager attr="Diff" mode="tab" title="DIFF">
+    <div fxFill fxLayout="column" fxLayoutAlign="start">
+        <o-table 
+            attr="DiffTable" 
+            service="Diff" 
+            entity="Diff" 
+            title="DIFF"
+            keys="id"
+            columns="id;rule_id;before_value;after_value" 
+            header-actions="R;D"
+            visible-columns="id;rule_id;before_value;after_value"  
+            sort-columns="id" 
+            query-rows="20" 
+            quick-filter="yes"
+            row-height="medium" 
+            select-all-checkbox="true" 
+            pageable="yes"  
+            auto-adjust="true" 
+            virtual-scroll="yes" 
+            edition-mode="dblclick"
+            horizontal-scroll="yes"
+            show-title="yes"
+            export-button="yes">
+            
+            <o-table-column #id attr="id" title=" id*" type="integer" editable="no" required="no" content-align="center"></o-table-column>
+            
+            <o-table-column attr="rule_id" title="rule_id">
+    <o-table-cell-renderer-service attr="rule_id" 
+        service="Rule" entity="RuleType" columns="id;name"
+        parent-keys="id:rule_id"
+        value-column="name" keys="rule_id"
+        visible-columns="name" separator=" - " width="680px">
+    </o-table-cell-renderer-service>
+</o-table-column>
+            
+            <o-table-column #before_value attr="before_value" title="before_value" editable="no" required="no" content-align="left"></o-table-column>
+            
+            <o-table-column #after_value attr="after_value" title="after_value" editable="no" required="no" content-align="left"></o-table-column>
+            
+            <o-table-context-menu></o-table-context-menu>
+            <o-table-paginator page-size-options="24;48;96"></o-table-paginator>
+        </o-table>
+    </div>
+</o-form-layout-manager>

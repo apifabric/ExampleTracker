@@ -1,0 +1,395 @@
+about:
+  date: November 25, 2024 23:58:20
+  recent_changes: works with modified safrs-react-admin
+  version: 0.0.0
+api_root: '{http_type}://{swagger_host}:{port}/{api}'
+authentication: '{system-default}'
+info:
+  number_relationships: 15
+  number_tables: 12
+info_toggle_checked: true
+resources:
+  Attribute:
+    attributes:
+    - label: ' name*'
+      name: name
+      required: true
+      search: true
+      sort: true
+    - name: Type
+      required: true
+    - name: description
+    - name: id
+    description: Table to store different attributes associated with examples.
+    info_list: Table to store different attributes associated with examples.
+    tab_groups:
+    - direction: tomany
+      fks:
+      - attribute_id
+      name: ExampleAttributeList
+      resource: ExampleAttribute
+    type: Attribute
+    user_key: name
+  Diff:
+    attributes:
+    - label: ' id*'
+      name: id
+      search: true
+      sort: true
+    - name: rule_id
+      required: true
+    - name: before_value
+    - name: after_value
+    description: Table to store differences between old and new case data in support
+      of rule evaluation.
+    info_list: Table to store differences between old and new case data in support
+      of rule evaluation.
+    tab_groups:
+    - direction: toone
+      fks:
+      - rule_id
+      name: rule
+      resource: Rule
+    type: Diff
+    user_key: id
+  Example:
+    attributes:
+    - label: ' name*'
+      name: name
+      required: true
+      search: true
+      sort: true
+    - name: description
+    - name: id
+    - name: date_entered
+      required: true
+      type: DATE
+    - name: is_predicted
+      type: Boolean
+    description: Table to store examples or cases entered by users.
+    info_list: Table to store examples or cases entered by users.
+    tab_groups:
+    - direction: tomany
+      fks:
+      - example_id
+      name: ExampleAttributeList
+      resource: ExampleAttribute
+    - direction: tomany
+      fks:
+      - example_id
+      name: ExampleAuthorList
+      resource: ExampleAuthor
+    - direction: tomany
+      fks:
+      - new_example_id
+      name: ExampleComparisonList
+      resource: ExampleComparison
+    - direction: tomany
+      fks:
+      - example_id
+      name: PredictionList
+      resource: Prediction
+    - direction: tomany
+      fks:
+      - example_supported_id
+      name: RuleList
+      resource: Rule
+    - direction: tomany
+      fks:
+      - source_case_data_id
+      name: source_case_dataRuleList
+      resource: Rule
+    type: Example
+    user_key: name
+  ExampleAttribute:
+    attributes:
+    - label: ' id*'
+      name: id
+      search: true
+      sort: true
+    - name: attribute_id
+      required: true
+    - name: example_id
+      required: true
+    - name: value
+    description: Junction table linking examples and their attributes with the corresponding
+      values.
+    info_list: Junction table linking examples and their attributes with the corresponding
+      values.
+    tab_groups:
+    - direction: toone
+      fks:
+      - attribute_id
+      name: attribute
+      resource: Attribute
+    - direction: toone
+      fks:
+      - example_id
+      name: example
+      resource: Example
+    type: ExampleAttribute
+    user_key: id
+  ExampleAuthor:
+    attributes:
+    - label: ' id*'
+      name: id
+      search: true
+      sort: true
+    - name: example_id
+      required: true
+    - name: user_id
+      required: true
+    description: Junction table associating users with the examples they have authored.
+    info_list: Junction table associating users with the examples they have authored.
+    tab_groups:
+    - direction: toone
+      fks:
+      - example_id
+      name: example
+      resource: Example
+    - direction: toone
+      fks:
+      - user_id
+      name: user
+      resource: User
+    type: ExampleAuthor
+    user_key: id
+  ExampleComparison:
+    attributes:
+    - label: ' id*'
+      name: id
+      search: true
+      sort: true
+    - name: new_example_id
+      required: true
+    - name: rule_id
+      required: true
+    - name: result
+    description: Table to store results of comparing new examples against existing
+      rules.
+    info_list: Table to store results of comparing new examples against existing rules.
+    tab_groups:
+    - direction: toone
+      fks:
+      - new_example_id
+      name: new_example
+      resource: Example
+    - direction: toone
+      fks:
+      - rule_id
+      name: rule
+      resource: Rule
+    type: ExampleComparison
+    user_key: id
+  Log:
+    attributes:
+    - label: ' id*'
+      name: id
+      search: true
+      sort: true
+    - name: session_id
+      required: true
+    - name: log_entry
+      required: true
+    - name: log_date
+      type: DATETIME
+    description: Table to log actions taken by users in the system.
+    info_list: Table to log actions taken by users in the system.
+    tab_groups:
+    - direction: toone
+      fks:
+      - session_id
+      name: session
+      resource: Session
+    type: Log
+    user_key: id
+  Prediction:
+    attributes:
+    - label: ' id*'
+      name: id
+      search: true
+      sort: true
+    - name: example_id
+      required: true
+    - name: rule_id
+      required: true
+    - name: predicted_value
+    - name: prediction_date
+      required: true
+      type: DATE
+    description: Table to store predicted outcomes using created rules.
+    info_list: Table to store predicted outcomes using created rules.
+    tab_groups:
+    - direction: toone
+      fks:
+      - example_id
+      name: example
+      resource: Example
+    - direction: toone
+      fks:
+      - rule_id
+      name: rule
+      resource: Rule
+    type: Prediction
+    user_key: id
+  Rule:
+    attributes:
+    - label: ' name*'
+      name: name
+      required: true
+      search: true
+      sort: true
+    - name: example_supported_id
+      required: true
+    - name: source_case_data_id
+      required: true
+    - name: description
+    - name: id
+    description: Table for storing rules that discriminate between different cases.
+    info_list: Table for storing rules that discriminate between different cases.
+    tab_groups:
+    - direction: tomany
+      fks:
+      - rule_id
+      name: DiffList
+      resource: Diff
+    - direction: tomany
+      fks:
+      - rule_id
+      name: ExampleComparisonList
+      resource: ExampleComparison
+    - direction: tomany
+      fks:
+      - rule_id
+      name: PredictionList
+      resource: Prediction
+    - direction: tomany
+      fks:
+      - rule_id
+      name: RuleAuthorList
+      resource: RuleAuthor
+    - direction: toone
+      fks:
+      - example_supported_id
+      name: example_supported
+      resource: Example
+    - direction: toone
+      fks:
+      - source_case_data_id
+      name: source_case_data
+      resource: Example
+    type: Rule
+    user_key: name
+  RuleAuthor:
+    attributes:
+    - label: ' id*'
+      name: id
+      search: true
+      sort: true
+    - name: rule_id
+      required: true
+    - name: user_id
+      required: true
+    description: Junction table associating users with the rules they have authored.
+    info_list: Junction table associating users with the rules they have authored.
+    tab_groups:
+    - direction: toone
+      fks:
+      - rule_id
+      name: rule
+      resource: Rule
+    - direction: toone
+      fks:
+      - user_id
+      name: user
+      resource: User
+    type: RuleAuthor
+    user_key: id
+  Session:
+    attributes:
+    - label: ' id*'
+      name: id
+      search: true
+      sort: true
+    - name: user_id
+      required: true
+    - name: start_time
+      type: DATETIME
+    - name: end_time
+      type: DATETIME
+    tab_groups:
+    - direction: tomany
+      fks:
+      - session_id
+      name: LogList
+      resource: Log
+    - direction: toone
+      fks:
+      - user_id
+      name: user
+      resource: User
+    type: Session
+    user_key: id
+  User:
+    attributes:
+    - label: ' username*'
+      name: username
+      required: true
+      search: true
+      sort: true
+    - name: email
+      required: true
+    - name: created_at
+      type: DATETIME
+    - name: id
+    description: Table to store user information who create examples or rules.
+    info_list: Table to store user information who create examples or rules.
+    tab_groups:
+    - direction: tomany
+      fks:
+      - user_id
+      name: ExampleAuthorList
+      resource: ExampleAuthor
+    - direction: tomany
+      fks:
+      - user_id
+      name: RuleAuthorList
+      resource: RuleAuthor
+    - direction: tomany
+      fks:
+      - user_id
+      name: SessionList
+      resource: Session
+    type: User
+    user_key: username
+settings:
+  HomeJS: /admin-app/home.js
+  max_list_columns: 8
+  style_guide:
+    applicationLocales:
+    - en
+    - es
+    currency_symbol: $
+    currency_symbol_position: left
+    date_format: LL
+    decimal_max: '1000000000'
+    decimal_min: '0'
+    decimal_separator: .
+    detail_mode: tab
+    edit_on_mode: dblclick
+    exclude_listpicker: false
+    include_translation: 'false'
+    keycloak_client_id: alsclient
+    keycloak_realm: kcals
+    keycloak_url: http://localhost:8080
+    locale: en
+    max_decimal_digits: '4'
+    min_decimal_digits: '2'
+    new_mode: dialog
+    pick_style: list
+    row_height: small,
+    serviceType: OntimizeEE
+    startSessionPath: /auth/login
+    style: light
+    thousand_separator: ','
+    use_keycloak: 'false'
